@@ -1,0 +1,39 @@
+.login {
+&-container {
+    background-image: linear-gradient(#FF928B,#FFAC81);
+    min-width: 280px;
+    width: 35%;
+    border-radius: 24px;
+
+    @media (max-width: 768px) {
+        width: 60%;
+    }
+
+    @media (max-width: 425px) {
+        width: 80%;
+    }
+}
+
+&-card {
+    display: flex;
+    flex-direction: column;
+    gap:30px;
+    padding: 5%;
+    text-align: center;
+
+    label {
+        font-size: 20px;
+    }
+
+    input {
+        font-size: 20px;
+    }
+
+    button {
+        font-size: 20px;
+        color: black;
+        width: 25%;
+        margin: auto;
+    }
+}
+}
