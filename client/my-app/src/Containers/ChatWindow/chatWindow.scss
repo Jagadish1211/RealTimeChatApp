@@ -1,0 +1,31 @@
+.Chat-container {
+    height: 80vh;
+    width: 65%;
+    background-image: linear-gradient(#FF928B,#FFAC81);
+    border-radius: 36px;
+    padding: 2%;
+    display: flex;
+    flex-direction: row;
+
+    @media (max-width: 768px) {
+        width: 87%;
+    }
+
+    .contacts-card {
+        width: 25%;
+
+        .heading-1 {
+            margin-top: 10px;
+        }
+
+        .contacts-list {
+            width: 88%;
+        }
+    }
+
+    .chat-window {
+        width: 75%;
+        background-color: white;
+        border-radius: 30px;
+    }
+}

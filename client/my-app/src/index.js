@@ -5,6 +5,8 @@ import App from './App';
 import ErrorPage from './error';
 
 import Login from './Containers/Login/login';
+import Signup from './Containers/Signup/signup';
+import ChatWindow from './Containers/ChatWindow/chatWindow';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -23,6 +25,11 @@ const router = createBrowserRouter(
         },
         {
           path: "/signup",
+          element: <Signup />
+        },
+        {
+          path: "/chat",
+          element: <ChatWindow />
         }
       ]
     }
