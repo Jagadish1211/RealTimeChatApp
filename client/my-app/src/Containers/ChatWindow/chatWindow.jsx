@@ -1,5 +1,8 @@
 import React from "react";
 import ContactCard from "../../Components/ContactCard/ContactCard";
+import MessageInput from "../../Components/MessageInput/messageInput";
+import MessagesBackground from "../../Components/MessagesBackground/messagesBackground";
+import ChatHeader from "../../Components/ChatHeader/chatHeader";
 
 import "./chatWindow.scss";
 
@@ -14,7 +17,9 @@ const ChatWindow = () => {
             </div>
         </div>
         <div className="chat-window">
-
+            <ChatHeader />
+            <MessagesBackground />
+            <MessageInput />
         </div>
     </div>
   );

@@ -1,0 +1,21 @@
+.message-bubbles {
+    width: 100%;
+    height: auto;
+    display: flex;
+
+
+    .message-text {
+        width: 40%;
+        background-image: linear-gradient(to right, #F9ABA4,#FBA8A4);
+        border-radius: 12px;
+        padding: 1% 2%;
+    }
+
+    &.incoming {
+        justify-content: flex-end;
+
+        .message-text {
+            background-image: linear-gradient(to right, #EF6DA0,#EE8E6B);
+        }
+    }
+}
