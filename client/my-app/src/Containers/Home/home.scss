@@ -1,0 +1,30 @@
+.login-container.home {
+background-image: linear-gradient(#FF928B,#FFAC81);
+min-width: 280px;
+width: 20%;
+border-radius: 36px;
+display: flex;
+flex-direction: column;
+gap:50px;
+padding: 5%;
+align-items: center;
+
+.home-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    button {
+        width: 120px;
+        color: black;
+    }
+}
+
+@media (max-width: 768px) {
+    width: 60%;
+}
+
+@media (max-width: 425px) {
+    width: 90%;
+}
+}

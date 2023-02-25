@@ -6,6 +6,10 @@ import ChatHeader from "../../Components/ChatHeader/chatHeader";
 
 import "./chatWindow.scss";
 
+// import { useSelector, useDispatch } from 'react-redux'
+// import { authSuccess } from "../../Features/Authentication/AuthSlice";
+
+
 
 const ChatWindow = () => {
   return (

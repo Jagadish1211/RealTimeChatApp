@@ -3,11 +3,13 @@ import "./signup.scss";
 
 import TextField from "@mui/material/TextField";
 import Button from '@mui/material/Button';
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-    const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
-    const [username, setUsername] = React.useState("");
+  const navigate = useNavigate();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [username, setUsername] = React.useState("");
 
     const handleSignUp = () => { 
         console.log({email, password, username})
@@ -16,7 +18,7 @@ const Signup = () => {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1> TADAA </h1>
+        <h1 onClick={() => navigate("/")}> TADAA </h1>
         <TextField
           required
           id="outlined-required"
