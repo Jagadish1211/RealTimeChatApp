@@ -2,29 +2,37 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const AuthState = {
     isAuthenticated: false,
+    isLoading: false,
     userEmail: null,
-    authError: null,
+    error: null,
 }
 
 export const AuthSlice = createSlice({
     name: 'authentication',
     initialState : AuthState,
     reducers: {
-        authSuccess : (state) => {
+        authRequest : (state) => {
+            const appState = {...state};
+            appState.isLoading = true;
+            return appState;
+        },
+        authSuccess : (state, action) => {
             const appState = {...state};
             appState.isAuthenticated = true;
-            // appState.userEmail = action.payload;
-            appState.authError = null;
-            return state;
+            appState.userEmail = action.payload?.user?.email;
+            appState.error = null;
+            appState.isLoading = false;
+            return appState;
         },
-        authFaliure : (state) => {
+        authFailure : (state) => {
             const appState = {...state};
+            appState.isLoading = false;
             appState.isAuthenticated = false;
-            // appState.authError = Error message relevant to the failure;
-            return state;
+            appState.error = "Error message relevant to the failure";
+            return appState;
         }
     }
 });
 
-export const {authSuccess, authFailure} = AuthSlice.actions;
+export const {authSuccess, authFailure, authRequest} = AuthSlice.actions;
 export default AuthSlice.reducer;
