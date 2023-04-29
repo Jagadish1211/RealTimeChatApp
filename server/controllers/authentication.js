@@ -4,19 +4,35 @@ const bcrypt = require("bcrypt");
 
 const User = require("../models/user.js");
 
-exports.signUpHandler = (req, res) => {
-  const newUser = new User({
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8),
-  });
+exports.signUpHandler = (req, res, next) => {
 
-  newUser.save((err, user) => {
+  // check if user already exists
+  User.findOne({
+    email: req.body.email,
+  }).exec((err, user) => {
     if (err) {
-      return res.status(500).send({ message: err });
+      return res.status(500).send({ message: "There was a problem signing up" })
     } else {
-      res.status(200).send({ message: "User registered successfully!" });
+      if (user) {
+        return res.status(400).send({ message: "User already exists, please login" })
+      } else {
+
+        // if user does not exist, create new user
+        const newUser = new User({
+          email: req.body.email,
+          password: bcrypt.hashSync(req.body.password, 8),
+        });
+
+        newUser.save((err, user) => {
+          if (err) {
+            return res.status(500).send({ message: err });
+          } else {
+            res.status(200).send({ message: "User registered successfully!" });
+          }
+        });
+      }
     }
-  });
+  })
 };
 
 exports.loginHandler = (req, res) => {

@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+
 import ContactCard from "../../Components/ContactCard/ContactCard";
 import MessageInput from "../../Components/MessageInput/messageInput";
 import MessagesBackground from "../../Components/MessagesBackground/messagesBackground";
 import ChatHeader from "../../Components/ChatHeader/chatHeader";
 
+
 import "./chatWindow.scss";
 
-// import { useSelector, useDispatch } from 'react-redux'
-// import { authSuccess } from "../../Features/Authentication/AuthSlice";
-
-
-
 const ChatWindow = () => {
+  const navigate = useNavigate()
+  const { isAuthenticated } = useSelector(state => state.authentication)
+
+  useEffect(() => {
+    !isAuthenticated && navigate("/login");
+  })
+
   return (
     <div className="Chat-container">
         <div className="contacts-card">

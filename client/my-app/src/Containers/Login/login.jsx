@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from 'react-redux';
 import "./login.scss";
@@ -17,7 +17,6 @@ const Login = () => {
     const dispatch = useDispatch();
 
     const handleLogin = () => { 
-        console.log({email, password})
         const options = {headers : {"Content-Type": "application/json"}}
         axios.post("http://localhost:5000/app/login", {
           email,
@@ -26,10 +25,12 @@ const Login = () => {
           dispatch(authRequest());
           if (res.status === 200 && res.data.message === "Login successful") {
             // create login logic
+
             dispatch(authSuccess(res.data)) && navigate("/chat");
           }
         }).catch(err => {
           console.log(err);
+          dispatch(authFailure());
           // show error message
         } )
     };

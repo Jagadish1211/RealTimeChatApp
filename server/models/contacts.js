@@ -2,8 +2,7 @@ const mongoose = require('mongoose')
 
 Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-    _id: Schema.Types.ObjectId,
+const ContactSchema = new Schema({
     email: {
         type: String,
         required: [true, "Email should be provided"],
@@ -16,13 +15,9 @@ const userSchema = new Schema({
         message : "Please enter a valid email address"
     }
     },
-    password: {
-        type: String,
-        required: [true, "Password should be provided"],
-    },
-    contacts: [{type: Schema.Types.ObjectId, ref: "Contact"}],
-    conversations: [{type: Schema.Types.ObjectId, ref: "Message"}]
+    user : {
+        type: Schema.Types.ObjectId, ref : "User"
+    }
 });
 
-
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("Contact", ContactSchema);

@@ -6,9 +6,9 @@ router = express.Router();
 
 const { signUpHandler, loginHandler } = require("../controllers/authentication");
 
-
 router.post("/signup", signUpHandler);
 
 router.post("/login", loginHandler);
+
 
 module.exports = router;

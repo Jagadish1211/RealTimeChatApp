@@ -3,7 +3,9 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 
 const UserRoutes = require("./routes/user.js");
+const ContactRoutes = require("./routes/contact.js");
 const verifyToken = require("./middlewares/authJWT.js");
+const MessageRoutes = require("./routes/messages.js");
 
 
 const app = express();
@@ -20,7 +22,7 @@ dotenv.config();
 app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Origin, authorization');
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
@@ -34,15 +36,16 @@ app.use(
 
 
 app.use("/app", UserRoutes);
-app.use("/app/login", verifyToken);
 
-// app.use("/app/signup", verifyToken);
+app.use("/app", ContactRoutes);
+
+app.use("/app", MessageRoutes)
 
 
 const PORT = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {
-    res.status(200).send("Server is giving response");
+    res.status(200).send("Server is running");
 });
 
 app.listen(PORT, () => {
