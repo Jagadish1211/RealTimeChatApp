@@ -4,6 +4,7 @@ const ContactState = {
     contacts: [],
     isLoading: false,
     error: null,
+    activeContact : null,
 };
 
 export const ContactSlice = createSlice({
@@ -28,7 +29,17 @@ export const ContactSlice = createSlice({
             appState.error = "Failed to add contacts";
             return appState;
         },
+        updateContacts: (state, action) => {
+            const appState = {...state};
+            appState.contacts = action.payload;
+            return appState
+        },
+        setActiveContact: (state, action) => {
+            const appState = {...state};
+            appState.activeContact = action.payload;
+            return appState
+        }
     }});
 
-    export const {AddContactsRequest, AddContactsSuccess, AddContactsFailure} = ContactSlice.actions;
+    export const {AddContactsRequest, AddContactsSuccess, AddContactsFailure, updateContacts, setActiveContact} = ContactSlice.actions;
     export default ContactSlice.reducer;

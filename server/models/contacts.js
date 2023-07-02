@@ -14,9 +14,6 @@ const ContactSchema = new Schema({
         },
         message : "Please enter a valid email address"
     }
-    },
-    user : {
-        type: Schema.Types.ObjectId, ref : "User"
     }
 });
 

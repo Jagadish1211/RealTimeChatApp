@@ -6,6 +6,7 @@ import "./login.scss";
 import TextField from "@mui/material/TextField";
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
+import {useCookies} from 'react-cookie';
 
 import { authSuccess, authFailure, authRequest } from "../../Features/Authentication/AuthSlice";
 
@@ -14,6 +15,7 @@ const Login = () => {
     const navigate = useNavigate()
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const [cookies, setCookie, removeCookie] = useCookies(['userInfo']);
     const dispatch = useDispatch();
 
     const handleLogin = () => { 
@@ -24,8 +26,9 @@ const Login = () => {
         }, options).then(res => {
           dispatch(authRequest());
           if (res.status === 200 && res.data.message === "Login successful") {
-            // create login logic
-
+            // create cookie
+            const cookieData = {email : res.data.user.email, accessToken : res.data.accessToken}
+            setCookie('accountDetails', cookieData)
             dispatch(authSuccess(res.data)) && navigate("/chat");
           }
         }).catch(err => {

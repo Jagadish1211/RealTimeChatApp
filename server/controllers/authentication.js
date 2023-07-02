@@ -19,12 +19,14 @@ exports.signUpHandler = (req, res, next) => {
 
         // if user does not exist, create new user
         const newUser = new User({
+          
           email: req.body.email,
           password: bcrypt.hashSync(req.body.password, 8),
         });
 
         newUser.save((err, user) => {
           if (err) {
+            console.log(err)
             return res.status(500).send({ message: err });
           } else {
             res.status(200).send({ message: "User registered successfully!" });

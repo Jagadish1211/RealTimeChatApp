@@ -1,11 +1,12 @@
 import React from "react";
 import "./chatHeader.scss"
 
-const ChatHeader = () => {
+const ChatHeader = ({name}) => {
+    
 return (
     <div className="chat-header">
         <div>
-            Contact name
+            {name}
         </div>
         </ div>
 )

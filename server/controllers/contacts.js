@@ -6,7 +6,7 @@ exports.addContactsHandler = (req, res) => {
     const contact = req.body.contactEmail;
     // find the user
 
-    User.findOne({email: req.body.email}).populate('contacts').exec(
+    User.findOne({email: req.body.email}).exec(
         (err, user) => {
             if (err) {
                 return res.status(500).send({message: "There was a problem adding the contact"})
@@ -19,14 +19,8 @@ exports.addContactsHandler = (req, res) => {
                                 .send({message: "Contact already exists"})
                         }
                         else {
-                            // create contact model using schema
-                            const newContact = new Contact({
-                                email: contact,
-                                user: user._id
-                            });
-                            newContact.save();
                             // add contact to user
-                            user.contacts.push(newContact);
+                            user.contacts.push(contact);
                             user.save();
                             return res.status(200).send({message: "Contact added successfully"});
                         }
@@ -38,7 +32,7 @@ exports.addContactsHandler = (req, res) => {
 };
 
 exports.getContactsHandler = (req, res) => {
-    User.findOne({ email: req.body.email }).populate('contacts').exec(
+    User.findOne({ email: req.body.email }).exec(
         (err, user) => {
             if (err) {
                 return res.status(500).send({ message: "There was a problem getting your contacts." })

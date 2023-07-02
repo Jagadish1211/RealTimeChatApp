@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const http = require('http')
 const mongoose = require("mongoose");
 const {Server} = require('socket.io');
+const cors = require('cors');
 
 
 
@@ -12,34 +13,43 @@ const verifyToken = require("./middlewares/authJWT.js");
 const MessageRoutes = require("./routes/messages.js");
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
 try {
   mongoose.connect("mongodb+srv://mrjagadish1211:N7BwSKwDyACYK@cluster0.j1pcnwy.mongodb.net/?retryWrites=true&w=majority");
   console.log("Connected to MongoDB");
-  const server =  http.createServer(app);
+  const server =  http.createServer(app).listen(PORT);
   const io = new Server(server, {cors: {origin :"*"}});
 
   
 // establishing socketIO connection
 io.on('connection', (socket) => {
+  // first create a room with email of user
 
-  // this gets triggered when client side sends message
-  socket.on('new message', (messageData, messageStatus) => {
-    // get info about the sender and the recipient 
+  socket.on("join room", (useEmail) => {
+    const room = `private:${useEmail}`;
+    socket.join(room);
+  })
+
+  socket.on('send message', (messageData, messageStatus) => {
+    
+    const {sender, message, target} =  messageData;
+    const room = `private:${target}`
+    socket.to(room).emit('new message', message, sender)
     console.log(messageData)
   })
+  
 })
 } catch(error) {
   console.log(`${error} : Could not connect to MongoDB`)
 }
 
 
-
-
+app.use(cors());
 app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Origin, authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Origin, Authorization');
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
@@ -59,14 +69,11 @@ app.use("/app", ContactRoutes);
 // app.use("/app", MessageRoutes)
 
 
-const PORT = process.env.PORT || 5000;
+
 
 app.get("/", (req, res) => {
     res.status(200).send("Server is running");
 });
-
-
-
 
 dotenv.config();
 

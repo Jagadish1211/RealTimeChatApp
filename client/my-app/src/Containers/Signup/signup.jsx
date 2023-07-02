@@ -1,4 +1,6 @@
 import React from "react";
+import axios from "axios";
+import { useSelector, useDispatch } from 'react-redux';
 import "./signup.scss";
 
 import TextField from "@mui/material/TextField";
@@ -12,7 +14,22 @@ const Signup = () => {
   const [username, setUsername] = React.useState("");
 
     const handleSignUp = () => { 
-        console.log({email, password, username})
+      const options = {headers : {"Content-Type": "application/json"}}
+      axios.post("http://localhost:5000/app/signup", {
+        email,
+        password
+      }, options).then(res => {
+        // dispatch(authRequest());
+        if (res.status === 200 && res.data.message === "User registered successfully!") {
+          // create login logic
+
+          navigate("/login");
+        }
+      }).catch(err => {
+        console.log(err.message);
+        // dispatch(authFailure());
+        // show error message
+      } )
     };
 
   return (

@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    _id: Schema.Types.ObjectId,
     email: {
         type: String,
         required: [true, "Email should be provided"],
@@ -20,7 +19,7 @@ const userSchema = new Schema({
         type: String,
         required: [true, "Password should be provided"],
     },
-    contacts: [{type: Schema.Types.ObjectId, ref: "Contact"}],
+    contacts: [],
     conversations: [{type: Schema.Types.ObjectId, ref: "Message"}]
 });
 
