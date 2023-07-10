@@ -10,10 +10,9 @@ const ContactCard = ({name}) => {
     const dispatch = useDispatch();
 
     const handleOpenChatWindow = () => {
-        // set this contact as the active contact
         dispatch(setActiveContact(name))
       };
-      
+
 return (
     <div className="contact" onClick={handleOpenChatWindow}>
         <p>

@@ -1,12 +1,9 @@
 import React from "react";
 import "./messageBubbles.scss";
 
-const MessageBubbles = ({ message }) => {
-
-    const [incomingMessage, setIncomingMessage] = React.useState(false);
-
+const MessageBubbles = ({ message, incomingMessage }) => {
     return (
-        <div className={`message-bubbles ${incomingMessage ? "incoming" : ""}`}>
+        <div className={`message-bubbles ${!incomingMessage ? "incoming" : ""}`}>
             <div className="message-text">
             {message}
             </div>

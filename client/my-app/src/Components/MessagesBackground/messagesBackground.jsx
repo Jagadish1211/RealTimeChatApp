@@ -3,23 +3,15 @@ import "./messagesBackground.scss";
 import { io } from "socket.io-client";
 
 import MessageBubbles from "../MessageBubbles/messageBubbles";
+import { useSelector } from "react-redux";
 
 
-const MessagesBackground = () => {
-
-    const socket = io("http://localhost:5000/");
-    const [msg, setMessage] = useState("");
-
-    socket.on("new message", (message, sender) => {
-        setMessage(message);
-      console.log(message)
-    })
-
-
-
+const MessagesBackground = ({messages}) => {
     return (
         <div className="messages-background">
-            {msg && <MessageBubbles message={msg} />}
+            {messages.length !== 0 && messages?.map(
+                msg => <MessageBubbles message={msg.messageText} incomingMessage={msg.incomingMessage}/>
+            ) }
             </ div>
     )
 

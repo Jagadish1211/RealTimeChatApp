@@ -36,7 +36,6 @@ io.on('connection', (socket) => {
     const {sender, message, target} =  messageData;
     const room = `private:${target}`
     socket.to(room).emit('new message', message, sender)
-    console.log(messageData)
   })
   
 })

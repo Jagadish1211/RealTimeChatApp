@@ -2,18 +2,29 @@
     width: 100%;
     display: flex;
     flex-direction: row;
+    margin-top: 10px;
 
     .input-field {
         width: 93%;
 
         .css-8ewcdo-MuiInputBase-root-MuiOutlinedInput-root {
             border-radius: 12px;
+            padding: 8px;
+        }
+
+        .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
+            line-height: 1;
+            font-size: 12px;
+        }
+
+        .MuiInputBase-input {
+            height: 45px !important;
         }
     }
 
     .send-button {
         width: 7%;
-        height: 50px;
+        height: 45px;
         margin-left: 15px;
         cursor: pointer;
     }
