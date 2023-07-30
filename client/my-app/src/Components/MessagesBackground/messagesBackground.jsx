@@ -10,7 +10,7 @@ const MessagesBackground = ({messages}) => {
     return (
         <div className="messages-background">
             {messages.length !== 0 && messages?.map(
-                msg => <MessageBubbles message={msg.messageText} incomingMessage={msg.incomingMessage}/>
+                (msg, index) => <MessageBubbles message={msg.messageText} key={msg+index} incomingMessage={msg.incomingMessage}/>
             ) }
             </ div>
     )
