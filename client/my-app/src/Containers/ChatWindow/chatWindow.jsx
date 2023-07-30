@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {useCookies} from 'react-cookie';
-import { io } from "socket.io-client";
+import socket from "../../Utils/socket";
+
 
 import ContactCard from "../../Components/ContactCard/ContactCard";
 import MessageInput from "../../Components/MessageInput/messageInput";
@@ -28,20 +29,23 @@ const ChatWindow = () => {
    const userEmail =  cookies.accountDetails.email;
    const accessToken = cookies.accountDetails.accessToken;
 
-   const socket = io("http://localhost:5000/", { autoConnect: true });
-
-   socket.on("connect", () => {
+useEffect(() => {
+  socket.on("connect", () => {
     socket.emit('join room', userEmail )
   });
+},[])
 
-  
+useEffect(() => {
   socket.on('new message', (message, sender) => {
+    console.log("this is run")
     dispatch(addReceivedMessages({
       message, sender, target: userEmail
     }))
-    console.log("this is called")
     // call messages api to save message in DB
-  })
+  });
+  return () => socket.off('new message');
+},[socket])
+
 
 
   const getAllContacts = () => {
@@ -78,7 +82,7 @@ const ChatWindow = () => {
         <div className="chat-window">
             <ChatHeader name={activeContact} />
             <MessagesBackground messages={messages}  />
-            <MessageInput/>
+            <MessageInput socket={socket}/>
         </div>
     </div>
   );
