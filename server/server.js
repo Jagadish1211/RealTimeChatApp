@@ -13,12 +13,14 @@ const verifyToken = require("./middlewares/authJWT.js");
 const MessageRoutes = require("./routes/messages.js");
 
 const app = express();
+const websocketApp = express();
+const WEBSOCKETPORT = process.env.WEBSOCKETPORT || 80;
 const PORT = process.env.PORT || 5000;
 
 try {
   mongoose.connect("mongodb+srv://mrjagadish1211:N7BwSKwDyACYK@cluster0.j1pcnwy.mongodb.net/?retryWrites=true&w=majority");
   console.log("Connected to MongoDB");
-  const server =  http.createServer(app).listen(PORT);
+  const server =  http.createServer(websocketApp).listen(WEBSOCKETPORT);
   const io = new Server(server, {cors: {origin :"*"}});
 
   
@@ -73,6 +75,8 @@ app.use("/app", ContactRoutes);
 app.get("/", (req, res) => {
     res.status(200).send("Server is running");
 });
+
+app.listen(PORT);
 
 dotenv.config();
 
