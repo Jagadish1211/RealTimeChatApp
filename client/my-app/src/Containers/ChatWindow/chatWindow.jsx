@@ -12,7 +12,7 @@ import MessagesBackground from "../../Components/MessagesBackground/messagesBack
 import ChatHeader from "../../Components/ChatHeader/chatHeader";
 
 import { updateContacts } from "../../Features/Contacts/ContactSlice";
-import { addReceivedMessages } from "../../Features/Messages/MessageSlice";
+import { addReceivedMessages, sendMessage } from "../../Features/Messages/MessageSlice";
 
 import "./chatWindow.scss";
 
@@ -29,6 +29,8 @@ const ChatWindow = () => {
    const userEmail =  cookies.accountDetails.email;
    const accessToken = cookies.accountDetails.accessToken;
 
+   const options = { headers: { "Content-Type": "application/json", "Authorization" : `Bearer ${accessToken}`} };
+
 useEffect(() => {
   socket.on("connect", () => {
     socket.emit('join room', userEmail )
@@ -36,12 +38,31 @@ useEffect(() => {
 },[])
 
 useEffect(() => {
+    // fetch and update messages
+    axios.post('http://localhost:5000/app/get-messages', {
+      sender: userEmail,
+      target: activeContact
+    }, options).then(res => {
+      res?.data?.messages?.reverse()?.map(({message, sender, target}) => {
+        if (sender.email === userEmail) {
+          const data = {message, sender: sender.email , target : activeContact  }
+          dispatch(sendMessage({data}))
+        } else {
+          dispatch(addReceivedMessages({
+            message, sender : activeContact, target: sender.email,
+          }))
+        }
+      });
+    }).catch(err => {
+        console.log(err,"this is")
+    });
+},[activeContact])
+
+useEffect(() => {
   socket.on('new message', (message, sender) => {
-    console.log("this is run")
     dispatch(addReceivedMessages({
       message, sender, target: userEmail
     }))
-    // call messages api to save message in DB
   });
   return () => socket.off('new message');
 },[socket])
@@ -49,7 +70,6 @@ useEffect(() => {
 
 
   const getAllContacts = () => {
-    const options = { headers: { "Content-Type": "application/json", "Authorization" : `Bearer ${accessToken}`} }
     axios.post('http://localhost:5000/app/contacts', {
       email: userEmail
     }, options).then(res => {
@@ -81,8 +101,8 @@ useEffect(() => {
         </div>
         <div className="chat-window">
             <ChatHeader name={activeContact} />
-            <MessagesBackground messages={messages}  />
-            <MessageInput socket={socket}/>
+            {<MessagesBackground messages={activeContact ? messages : []}  />}
+            {activeContact ?<MessageInput socket={socket}/> : null}
         </div>
     </div>
   );

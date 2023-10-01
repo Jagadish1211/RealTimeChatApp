@@ -11,6 +11,7 @@ const UserRoutes = require("./routes/user.js");
 const ContactRoutes = require("./routes/contact.js");
 const verifyToken = require("./middlewares/authJWT.js");
 const MessageRoutes = require("./routes/messages.js");
+const { sendMessageHandler } = require("./controllers/message.js");
 
 const app = express();
 const websocketApp = express();
@@ -38,6 +39,7 @@ io.on('connection', (socket) => {
     const {sender, message, target} =  messageData;
     const room = `private:${target}`
     socket.to(room).emit('new message', message, sender)
+    sendMessageHandler(message, sender, target);
   })
   
 })
@@ -67,7 +69,7 @@ app.use("/app", UserRoutes);
 
 app.use("/app", ContactRoutes);
 
-// app.use("/app", MessageRoutes)
+app.use("/app", MessageRoutes)
 
 
 

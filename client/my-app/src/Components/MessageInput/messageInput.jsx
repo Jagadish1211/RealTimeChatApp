@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {useCookies} from 'react-cookie';
 
 import "./messageInput.scss"
-import { sendMessage, addReceivedMessages } from "../../Features/Messages/MessageSlice";
+import { sendMessage } from "../../Features/Messages/MessageSlice";
 
 const MessageInput = ({socket}) => {
   const dispatch = useDispatch();
