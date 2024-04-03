@@ -15,7 +15,7 @@ const { sendMessageHandler } = require("./controllers/message.js");
 
 const app = express();
 const websocketApp = express();
-const WEBSOCKETPORT = process.env.WEBSOCKETPORT || 80;
+const WEBSOCKETPORT = process.env.WEBSOCKETPORT || 3005;
 const PORT = process.env.PORT || 5000;
 
 try {

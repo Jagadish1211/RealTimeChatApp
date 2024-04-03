@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -12,7 +12,7 @@ import MessagesBackground from "../../Components/MessagesBackground/messagesBack
 import ChatHeader from "../../Components/ChatHeader/chatHeader";
 
 import { updateContacts } from "../../Features/Contacts/ContactSlice";
-import { addReceivedMessages, sendMessage } from "../../Features/Messages/MessageSlice";
+import { sendMessage } from "../../Features/Messages/MessageSlice";
 
 import "./chatWindow.scss";
 
@@ -37,22 +37,26 @@ useEffect(() => {
   });
 },[])
 
+
+
 useEffect(() => {
     // fetch and update messages
+    let messageList = [];
     axios.post('http://localhost:5000/app/get-messages', {
       sender: userEmail,
       target: activeContact
     }, options).then(res => {
-      res?.data?.messages?.reverse()?.map(({message, sender, target}) => {
+      res?.data?.messages?.reverse()?.forEach(({message, sender, target}) => {
         if (sender.email === userEmail) {
-          const data = {message, sender: sender.email , target : activeContact  }
-          dispatch(sendMessage({data}))
+          const messageData = {message, sender: sender.email , target : activeContact  }
+          messageList.push(messageData)
         } else {
-          dispatch(addReceivedMessages({
+          messageList.push({
             message, sender : activeContact, target: sender.email,
-          }))
+          })
         }
       });
+      dispatch(sendMessage(messageList))
     }).catch(err => {
         console.log(err,"this is")
     });
@@ -60,16 +64,16 @@ useEffect(() => {
 
 useEffect(() => {
   socket.on('new message', (message, sender) => {
-    dispatch(addReceivedMessages({
+    dispatch(sendMessage([...messages, {
       message, sender, target: userEmail
-    }))
+    }]))
   });
   return () => socket.off('new message');
-},[socket])
+},[socket, messages])
 
 
 
-  const getAllContacts = () => {
+  const getAllContacts = useCallback(() => {
     axios.post('http://localhost:5000/app/contacts', {
       email: userEmail
     }, options).then(res => {
@@ -78,7 +82,7 @@ useEffect(() => {
     }).catch(err => {
         console.log(err,"this is")
     });
-  };
+  },[]);
 
   useEffect(() => {
     if (!isAuthenticated ) {

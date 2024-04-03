@@ -9,8 +9,8 @@ const MessagesBackground = ({messages}) => {
     const {contacts, activeContact}  = useSelector(state => state.contacts);
     return (
         <div className="messages-background">
-            {messages.length !== 0 && messages?.map(
-                (msg, index) => msg.sender === activeContact || msg.target === activeContact ? <MessageBubbles message={msg.messageText} key={msg+index} incomingMessage={msg.incomingMessage}/> : null
+            {messages?.length !== 0 && messages?.map(
+                (msg, index) => msg.sender === activeContact || msg.target === activeContact ? <MessageBubbles message={msg.message} key={msg+index} incomingMessage={msg.sender === activeContact}/> : null
             ) }
             </ div>
     )

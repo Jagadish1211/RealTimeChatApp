@@ -14,11 +14,12 @@ const MessageInput = ({socket}) => {
   const userEmail = cookies.accountDetails.email;
   const [message, setMessage] = React.useState("");
   const { activeContact }  = useSelector(state => state.contacts);
+  const { messages } =  useSelector(state => state.messages);
 
   const handleSendMessage = () => { 
     const data = {message, sender: userEmail , target : activeContact  }
     socket.emit('send message', data)
-    dispatch(sendMessage({data}))
+    dispatch(sendMessage([...messages, data]))
     setMessage("");
   }
 
