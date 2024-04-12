@@ -95,7 +95,8 @@ useEffect(() => {
   return (
     <div className="Chat-container">
         <div className="contacts-card">
-            <h2 className="heading-1">Contacts</h2>
+            <h1 className="heading-1">{userEmail}</h1>
+            <h2 className="heading-2">Contacts</h2>
             <div className="contacts-list">
               {contacts.map(contact => { return (
                   <ContactCard key={contact} name={contact}/>

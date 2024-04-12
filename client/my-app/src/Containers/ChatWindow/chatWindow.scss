@@ -13,10 +13,17 @@
     }
 
     .contacts-card {
-        width: 25%;
+        width: 30%;
 
         .heading-1 {
-            margin-top: 10px;
+            margin-top: 15px;
+            margin-bottom: 25px ;
+            font-size: 20px;
+        }
+
+        .heading-2 {
+            margin-top: 5px;
+            font-size: 18px;
         }
 
         .contacts-list {
@@ -25,7 +32,7 @@
     }
 
     .chat-window {
-        width: 75%;
+        width: 70%;
         background-color: white;
         border-radius: 30px;
         position: relative;
