@@ -24,6 +24,23 @@
         .heading-2 {
             margin-top: 5px;
             font-size: 18px;
+            font-weight: 400;
+
+            span {
+                margin-left: 20px;
+                cursor: pointer;
+
+                .add-icon {
+                    width: 16px;
+                    height: 16px;
+                    margin-left: 20%;
+                }
+
+                .react-tooltip {
+                    background-color: white;
+                    color: #000;
+                }
+            }
         }
 
         .contacts-list {

@@ -1,24 +1,35 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {useCookies} from 'react-cookie';
 import socket from "../../Utils/socket";
+import { Tooltip } from 'react-tooltip';
 
+import 'react-tooltip/dist/react-tooltip.css'
 
 import ContactCard from "../../Components/ContactCard/ContactCard";
 import MessageInput from "../../Components/MessageInput/messageInput";
 import MessagesBackground from "../../Components/MessagesBackground/messagesBackground";
 import ChatHeader from "../../Components/ChatHeader/chatHeader";
-
-import { updateContacts } from "../../Features/Contacts/ContactSlice";
-import { sendMessage } from "../../Features/Messages/MessageSlice";
+import AddContactCard from "../../Components/AddContactCard/AddContactCard";
 
 import "./chatWindow.scss";
+import { updateContacts } from "../../Features/Contacts/ContactSlice";
+import { sendMessage } from "../../Features/Messages/MessageSlice";
+const plus = require("../../assets/plus.png");
+
+
+
+
+
 
 const ChatWindow = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+
+  const [addContactModalOpen, setAddContactModalOpen] = useState(false);
   
   const [cookies] = useCookies(['userInfo']);
   const isAuthenticated  = cookies.accountDetails.email;
@@ -92,11 +103,15 @@ useEffect(() => {
     }
   }, [isAuthenticated]);
 
+  const handleAddContactModal = () => {
+    setAddContactModalOpen(true);
+  }
+
   return (
     <div className="Chat-container">
         <div className="contacts-card">
-            <h1 className="heading-1">{userEmail}</h1>
-            <h2 className="heading-2">Contacts</h2>
+            <div className="heading-1">{userEmail}</div>
+            <h2 className="heading-2">Contacts<span data-tooltip-id="my-tooltip" data-tooltip-content="Add contact"><img onClick={handleAddContactModal} className="add-icon" alt="add contact icon" src={plus} /><Tooltip id="my-tooltip" /></span></h2>
             <div className="contacts-list">
               {contacts.map(contact => { return (
                   <ContactCard key={contact} name={contact}/>
@@ -109,6 +124,8 @@ useEffect(() => {
             {<MessagesBackground messages={activeContact ? messages : []}  />}
             {activeContact ?<MessageInput socket={socket}/> : null}
         </div>
+
+        <AddContactCard isOpen={addContactModalOpen} handleClose={() => setAddContactModalOpen(false)} />
     </div>
   );
 };
