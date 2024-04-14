@@ -36,7 +36,6 @@ const ChatWindow = () => {
   const {contacts, activeContact}  = useSelector(state => state.contacts);
   const { messages } =  useSelector(state => state.messages);
   
-  
    const userEmail =  cookies.accountDetails.email;
    const accessToken = cookies.accountDetails.accessToken;
 
@@ -84,7 +83,7 @@ useEffect(() => {
 
 
 
-  const getAllContacts = useCallback(() => {
+  const getAllContacts = () => {
     axios.post('http://localhost:5000/app/contacts', {
       email: userEmail
     }, options).then(res => {
@@ -93,7 +92,7 @@ useEffect(() => {
     }).catch(err => {
         console.log(err,"this is")
     });
-  },[]);
+  };
 
   useEffect(() => {
     if (!isAuthenticated ) {
