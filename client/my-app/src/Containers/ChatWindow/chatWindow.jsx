@@ -19,11 +19,6 @@ import { updateContacts } from "../../Features/Contacts/ContactSlice";
 import { sendMessage } from "../../Features/Messages/MessageSlice";
 const plus = require("../../assets/plus.png");
 
-
-
-
-
-
 const ChatWindow = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -46,7 +41,6 @@ useEffect(() => {
     socket.emit('join room', userEmail )
   });
 },[])
-
 
 
 useEffect(() => {
