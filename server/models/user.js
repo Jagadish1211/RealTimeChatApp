@@ -20,6 +20,7 @@ const userSchema = new Schema({
         required: [true, "Password should be provided"],
     },
     contacts: [],
+    profileImage: {type: String, default: ""},
     conversations: [{type: Schema.Types.ObjectId, ref: "Message"}]
 });
 

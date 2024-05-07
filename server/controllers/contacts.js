@@ -43,5 +43,31 @@ exports.getContactsHandler = (req, res) => {
         }
 
     )
-
 };
+
+exports.deleteContactsHandler = (req, res) => {
+    const contact = req.body.contactEmail;
+
+    User.findOne({email: req.body.email}).exec(
+        (err, user) => {
+            if (err) {
+                return res.status(500).send({message: "There was a problem adding the contact"})
+            } else {
+                if (user) {
+                    // check if contact exists
+                        if (user.contacts.includes(contact)) {
+                            user.contacts = user.contacts.filter(item => item !== contact );
+                            user.save();
+                            return res
+                                .status(200)
+                                .send({message: "Contact deleted"})
+                        }
+                        else {
+                            // contact does not exist
+                            return res.status(400).send({message: "Contact does not exist"});
+                        }
+                    }  
+                } 
+        }
+    )
+}

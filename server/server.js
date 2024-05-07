@@ -11,6 +11,7 @@ const UserRoutes = require("./routes/user.js");
 const ContactRoutes = require("./routes/contact.js");
 const verifyToken = require("./middlewares/authJWT.js");
 const MessageRoutes = require("./routes/messages.js");
+const profileImageRoute = require("./routes/profileImage.js");
 const { sendMessageHandler } = require("./controllers/message.js");
 
 const app = express();
@@ -47,7 +48,6 @@ io.on('connection', (socket) => {
   console.log(`${error} : Could not connect to MongoDB`)
 }
 
-
 app.use(cors());
 app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -70,6 +70,8 @@ app.use("/app", UserRoutes);
 app.use("/app", ContactRoutes);
 
 app.use("/app", MessageRoutes)
+
+app.use("/uploads", profileImageRoute);
 
 
 

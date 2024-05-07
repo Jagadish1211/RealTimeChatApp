@@ -11,4 +11,6 @@ router.post("/contacts", getContactsHandler)
 
 router.post("/add-contact", addContactsHandler)
 
+router.post("/delete-contact", deleteContactsHandler)
+
 module.exports = router;
