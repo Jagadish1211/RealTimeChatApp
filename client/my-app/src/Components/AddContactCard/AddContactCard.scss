@@ -1,0 +1,59 @@
+
+
+.add-contact-card-container {
+    position: absolute;
+    width: 25%;
+    height: 25%;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+
+    .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
+        width: 100%;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    input {
+        font-size: 15px;
+        height: 15px;
+        width: 100%;
+        border: 1.5px solid black;
+
+        &:focus {
+            border: none;
+        }
+    }
+
+    button {
+        font-size: 15px;
+        color: black;
+        border: 1px solid black;
+        margin: 20px;
+        white-space: nowrap;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 10px;
+        
+    }
+}
+
+.ReactModal__Overlay {
+    position: absolute !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-20%, -50%);
+}

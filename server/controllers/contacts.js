@@ -22,7 +22,7 @@ exports.addContactsHandler = (req, res) => {
                             // add contact to user
                             user.contacts.push(contact);
                             user.save();
-                            return res.status(200).send({message: "Contact added successfully"});
+                            return res.status(200).send({message: "Contact added successfully" , contacts : user.contacts});
                         }
                     }  
                 } 

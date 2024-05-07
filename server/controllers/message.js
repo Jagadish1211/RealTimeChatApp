@@ -53,12 +53,12 @@ exports.getConversationHandler = (req,res) => {
         else {
             // filter the messages using the target/contact email
             const messages = user.conversations
-            messages.filter((message) => {
-                message.target.email === target
+            const filteredMessages = messages.filter((message) => {
+                return message.target.email === target && message.sender.email === sender || message.target.email === sender && message.sender.email === target
             })
 
             return res.status(200).send({
-                messages : messages
+                messages : filteredMessages
             })
         }
      }   
