@@ -2,7 +2,7 @@ const express = require("express")
 
 router = express.Router();
 
-const { addContactsHandler, getContactsHandler } = require("../controllers/contacts");
+const { addContactsHandler, getContactsHandler, deleteContactsHandler } = require("../controllers/contacts");
 const verifyToken = require("../middlewares/authJWT");
 
 router.use(verifyToken);
