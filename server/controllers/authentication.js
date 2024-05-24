@@ -64,15 +64,25 @@ exports.loginHandler = (req, res) => {
     }
 
     // Sign token with user ID
-    const authtoken = jwt.sign(
+    const authToken = jwt.sign(
       {
         id: user.email,
       },
       "THIS_IS_API_SECRET",
       {
+        expiresIn: 600, // expires in 10 mins
+      }
+    );
+
+    const refreshToken = jwt.sign(
+      {
+        id: user.email,
+      }, "THIS_IS_API_SECRET_REFRESH_TOKEN", {
         expiresIn: 86400, // expires in 24 hours
       }
     );
+
+    res.cookie("refreshToken", refreshToken, { httpOnly : true, secure : true, sameSite : "none"})
 
     // now send response with token and login message
     res.status(200).send({
@@ -80,7 +90,8 @@ exports.loginHandler = (req, res) => {
         email: user.email,
       },
       message: "Login successful",
-      accessToken: authtoken,
+      accessToken: authToken,
+      refreshToken: refreshToken
     });
   });
 };

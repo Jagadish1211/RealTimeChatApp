@@ -13,6 +13,7 @@ const verifyToken = require("./middlewares/authJWT.js");
 const MessageRoutes = require("./routes/messages.js");
 const profileImageRoute = require("./routes/profileImage.js");
 const { sendMessageHandler } = require("./controllers/message.js");
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const websocketApp = express();
@@ -63,6 +64,7 @@ app.use(
     extended: true,
   })
 );
+app.use(cookieParser());
 
 
 app.use("/app", UserRoutes);
