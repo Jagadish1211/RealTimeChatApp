@@ -8,6 +8,7 @@ import Login from "./Containers/Login/login";
 import Signup from "./Containers/Signup/signup";
 import ChatWindow from "./Containers/ChatWindow/chatWindow";
 import Home from "./Containers/Home/home";
+import ProtectedRoute from "./Utils/ProtectedRoute";
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -18,22 +19,10 @@ const router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "/signup",
-        element: <Signup />,
-      },
-      {
-        path: "/chat",
-        element: <ChatWindow />,
-      },
+      {path: "/", element: <Home />},
+      {path: "/login", element: <Login />},
+      {path: "/signup", element: <Signup />},
+      {path: "/chat", element: <ProtectedRoute><ChatWindow /></ProtectedRoute>},
     ],
   },
 ]);
