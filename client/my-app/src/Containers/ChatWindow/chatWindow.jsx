@@ -17,6 +17,7 @@ import AddContactCard from "../../Components/AddContactCard/AddContactCard";
 import "./chatWindow.scss";
 import { updateContacts } from "../../Features/Contacts/ContactSlice";
 import { sendMessage } from "../../Features/Messages/MessageSlice";
+import AddProfilePicCard from "../../Components/AddProfilePicCard/AddProfilePicCard";
 const plus = require("../../assets/plus.png");
 
 const ChatWindow = () => {
@@ -25,6 +26,7 @@ const ChatWindow = () => {
 
 
   const [addContactModalOpen, setAddContactModalOpen] = useState(false);
+  const [addProfilePicModalOpen, setAddProfilePicModalOpen] = useState(false);
   
   const [cookies] = useCookies(['userInfo']);
   const isAuthenticated  = cookies.accountDetails.email;
@@ -100,10 +102,14 @@ useEffect(() => {
     setAddContactModalOpen(true);
   }
 
+  const addProfilePic = () => {
+
+  }
+
   return (
     <div className="Chat-container">
         <div className="contacts-card">
-            <div className="heading-1">{userEmail}</div>
+            <div className="heading-1"><span onClick={addProfilePic}><img src=""></img></span>{userEmail}</div>
             <h2 className="heading-2">Contacts<span data-tooltip-id="my-tooltip" data-tooltip-content="Add contact"><img onClick={handleAddContactModal} className="add-icon" alt="add contact icon" src={plus} /><Tooltip id="my-tooltip" /></span></h2>
             <div className="contacts-list">
               {contacts.map(contact => { return (
@@ -119,6 +125,7 @@ useEffect(() => {
         </div>
 
         <AddContactCard isOpen={addContactModalOpen} handleClose={() => setAddContactModalOpen(false)} />
+        <AddProfilePicCard isOpen={addProfilePicModalOpen} handleClose={() => setAddProfilePicModalOpen(false)} />
     </div>
   );
 };

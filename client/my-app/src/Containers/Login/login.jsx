@@ -26,6 +26,7 @@ const Login = () => {
         }, options).then(res => {
           dispatch(authRequest());
           if (res.status === 200 && res.data.message === "Login successful") {
+            console.log(res,"this is")
             // create cookie
             const cookieData = {email : res.data.user.email, accessToken : res.data.accessToken}
             setCookie('accountDetails', cookieData)
