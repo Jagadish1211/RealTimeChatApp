@@ -1,7 +1,5 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-// import User from "..models/user.js";
-
 const User = require("../models/user.js");
 
 exports.signUpHandler = (req, res, next) => {
@@ -95,3 +93,42 @@ exports.loginHandler = (req, res) => {
     });
   });
 };
+
+exports.logoutHandler = (req, res) => {
+  res.clearCookie("refreshToken");
+  res.status(200).send({ message: "Logout successful" });
+};
+
+exports.refreshTokenHandler = (req, res, next) => {
+  const token = req.cookies.refreshToken;
+
+  if (!token) {
+    return res.status(403).send({ message: "No token provided" });
+  }
+
+  jwt.verify(token, "THIS_IS_API_SECRET_REFRESH_TOKEN", (err, decodedUserDetails) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorized access" });
+    }
+
+    User.findOne({email: decodedUserDetails.id}).exec((error, user) => {
+      if (error) { return res.status(500).send({message: "An error occurred while retrieving user"})}
+      else if (user.email = decodedUserDetails.id) {
+        const authToken = jwt.sign(
+          {
+            id: decodedUserDetails.id,
+          },
+          "THIS_IS_API_SECRET",
+          {
+            expiresIn: 600, // expires in 10 mins
+          }
+        );
+    
+        res.status(200).send({
+          accessToken: authToken,
+        });
+      }
+  })
+
+  }
+  )};
