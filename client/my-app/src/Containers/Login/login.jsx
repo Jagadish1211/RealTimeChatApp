@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import axios from "axios";
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import "./login.scss";
 
 import TextField from "@mui/material/TextField";
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
-import {useCookies} from 'react-cookie';
 
 import { authSuccess, authFailure, authRequest } from "../../Features/Authentication/AuthSlice";
 
@@ -15,10 +14,11 @@ const Login = () => {
     const navigate = useNavigate()
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const [cookies, setCookie, removeCookie] = useCookies(['userInfo']);
     const dispatch = useDispatch();
 
     const handleLogin = () => { 
+      // alternative refactored logic for axios call and login 
+
         const options = {headers : {"Content-Type": "application/json"}}
         axios.post("http://localhost:5000/app/login", {
           email,
@@ -26,10 +26,10 @@ const Login = () => {
         }, options).then(res => {
           dispatch(authRequest());
           if (res.status === 200 && res.data.message === "Login successful") {
-            console.log(res,"this is")
             // create cookie
-            const cookieData = {email : res.data.user.email, accessToken : res.data.accessToken}
-            setCookie('accountDetails', cookieData)
+            const userData = {email : res.data.user.email}
+            localStorage.setItem("userInfo", JSON.stringify(userData));
+            localStorage.setItem("accessToken", JSON.stringify(res.data.accessToken));
             dispatch(authSuccess(res.data)) && navigate("/chat");
           }
         }).catch(err => {

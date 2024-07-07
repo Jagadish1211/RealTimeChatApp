@@ -88,8 +88,7 @@ exports.loginHandler = (req, res) => {
         email: user.email,
       },
       message: "Login successful",
-      accessToken: authToken,
-      refreshToken: refreshToken
+      accessToken: authToken
     });
   });
 };

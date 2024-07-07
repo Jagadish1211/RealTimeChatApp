@@ -18,7 +18,7 @@ import "./chatWindow.scss";
 import { updateContacts } from "../../Features/Contacts/ContactSlice";
 import { sendMessage } from "../../Features/Messages/MessageSlice";
 import AddProfilePicCard from "../../Components/AddProfilePicCard/AddProfilePicCard";
-const plus = require("../../assets/plus.png");
+import plus from "../../assets/plus.png";
 
 const ChatWindow = () => {
   const navigate = useNavigate();

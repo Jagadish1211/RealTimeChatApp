@@ -1,15 +1,14 @@
 import React, {memo} from "react";
-import Login from "../Containers/Login/login";
+import Home from "../Containers/Home/home";
+import { Navigate, redirect } from "react-router-dom";
+import useAuth from "../Hooks/useAuth";
 
 
-const ProtectedRoute = ({children}) => {
-    const getAuthStatus = () => false;
-    const isAuthenticated = getAuthStatus();
-  return (
-    <>
-        { isAuthenticated ? children : <Login /> }
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return <>
+      {isAuthenticated ? children : <Navigate to='/'/>}
     </>
-  );
 }
 
 export default memo(ProtectedRoute);

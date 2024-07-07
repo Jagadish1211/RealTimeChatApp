@@ -10,17 +10,18 @@ import "./AddContactCard.scss"
 import axios from "axios";
 
 import { updateContacts } from "../../Features/Contacts/ContactSlice";
+import useAuth from "../../Hooks/useAuth";
 
 
 const AddContactCard = ({ isOpen, className = "modal-container", handleClose }) => {
     const [contactEmail, setContactEmail] = useState("");
-    const [cookies] = useCookies(['userInfo']);
     const dispatch = useDispatch();
+    const { userInfo } = useAuth();
 
     const handleAddContact = () => {
         // contactEmail , email
-        const userEmail =  cookies.accountDetails.email;
-        const accessToken = cookies.accountDetails.accessToken;
+        const userEmail =  userInfo.email;
+        const accessToken = userInfo.accessToken;
         const options = { headers: { "Content-Type": "application/json", "authorization" : `Bearer ${accessToken}`} };
         axios.post('http://localhost:5000/app/add-contact', {
             email : userEmail,
