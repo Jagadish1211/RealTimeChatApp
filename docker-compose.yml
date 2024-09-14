@@ -1,0 +1,52 @@
+
+#Services
+services:
+  #Backend Service
+  server:
+    container_name: server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    # volumes:
+    #   - my-data:/server
+    #   - my-data:/server/node_modules
+    develop:
+      watch:
+        - action: sync
+          path: ./server
+          target: /server
+          ignore:
+              - node_modules/
+        - action: rebuild
+          path: package.json
+          ignore:
+              - node_modules/
+
+
+  #Frontend Service
+  client: 
+    build:
+      context: ./client/my-app
+      dockerfile: Dockerfile
+
+    container_name: client
+    ports:
+      - "3000:3000"
+    develop:
+      watch:
+        - action: sync
+          path: ./client/my-app
+          target: /app
+          ignore:
+              - node_modules/
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - server
+    # volumes:
+    #   - my-data:/app
+
+volumes:
+  my-data:

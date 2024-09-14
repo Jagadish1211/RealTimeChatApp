@@ -1,11 +1,9 @@
 const express = require("express")
-const dotenv = require("dotenv");
+const dotenv = require("dotenv").config();
 const http = require('http')
 const mongoose = require("mongoose");
 const {Server} = require('socket.io');
 const cors = require('cors');
-
-
 
 const UserRoutes = require("./routes/user.js");
 const ContactRoutes = require("./routes/contact.js");
@@ -21,12 +19,10 @@ const WEBSOCKETPORT = process.env.WEBSOCKETPORT || 3005;
 const PORT = process.env.PORT || 5000;
 
 try {
-  mongoose.connect("mongodb+srv://mrjagadish1211:N7BwSKwDyACYK@cluster0.j1pcnwy.mongodb.net/?retryWrites=true&w=majority");
+  mongoose.connect(process.env.MONGODB_URI);
   console.log("Connected to MongoDB");
   const server =  http.createServer(websocketApp).listen(WEBSOCKETPORT);
   const io = new Server(server, {cors: {origin :"*"}});
-
-  
 // establishing socketIO connection
 io.on('connection', (socket) => {
   // first create a room with email of user
@@ -84,11 +80,9 @@ app.use("/uploads", profileImageRoute);
 
 
 app.get("/", (req, res) => {
-    res.status(200).send("Server is running");
+    res.status(200).send("Server is running sucessfully");
 });
 
 app.listen(PORT);
-
-dotenv.config();
 
 
