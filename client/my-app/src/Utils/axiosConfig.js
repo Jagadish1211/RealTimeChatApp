@@ -11,8 +11,7 @@ export class AxiosConfig {
     }
 
     // create a new axios instance
-    createAxiosInstance() {
-        return axios.create({
+    createAxiosInstance =  axios.create({
             baseURL: this.baseURL,
             headers: {
                 "Content-type": "application/json",
@@ -20,5 +19,4 @@ export class AxiosConfig {
             },
             withCredentials: this.withCredentials,
         });
-    }
 }

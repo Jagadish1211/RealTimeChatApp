@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 
 import { authSuccess, authFailure, authRequest } from "../../Features/Authentication/AuthSlice";
+import { axiosInstance } from "../../Utils/axiosInstances";
 
 
 const Login = () => {
@@ -18,12 +19,9 @@ const Login = () => {
 
     const handleLogin = () => { 
       // alternative refactored logic for axios call and login 
-
-        const options = {headers : {"Content-Type": "application/json"}}
-        axios.post("http://localhost:5000/app/login", {
-          email,
-          password
-        }, options).then(res => {
+        axiosInstance.post("/login", {
+          data: { email, password }
+        }).then(res => {
           dispatch(authRequest());
           if (res.status === 200 && res.data.message === "Login successful") {
             // create cookie

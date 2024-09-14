@@ -42,7 +42,7 @@ exports.sendMessageHandler = (message, sender, target) => {
 }
 
 exports.getConversationHandler = (req,res) => {
-    const { sender, target } = req.body;
+    const { sender, target } = req.body.data;
     // find the user in DB
     User.findOne({email : sender}).populate({path : "conversations", populate : [{ path: 'sender', model: 'User'}, { path: 'target', model: 'User'} ] }).exec((err, user) => {
      if (err) return res.status(500).send({"message" : "There was a problem getting the conversation"});

@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import {useCookies} from 'react-cookie';
 import socket from "../../Utils/socket";
 import { Tooltip } from 'react-tooltip';
 
@@ -18,6 +17,7 @@ import "./chatWindow.scss";
 import { updateContacts } from "../../Features/Contacts/ContactSlice";
 import { sendMessage } from "../../Features/Messages/MessageSlice";
 import AddProfilePicCard from "../../Components/AddProfilePicCard/AddProfilePicCard";
+import  privateAxiosInstance from "../../Utils/axiosInstances";
 import plus from "../../assets/plus.png";
 
 const ChatWindow = () => {
@@ -27,71 +27,75 @@ const ChatWindow = () => {
 
   const [addContactModalOpen, setAddContactModalOpen] = useState(false);
   const [addProfilePicModalOpen, setAddProfilePicModalOpen] = useState(false);
-  
-  const [cookies] = useCookies(['userInfo']);
-  const isAuthenticated  = cookies.accountDetails.email;
-  const {contacts, activeContact}  = useSelector(state => state.contacts);
-  const { messages } =  useSelector(state => state.messages);
-  
-   const userEmail =  cookies.accountDetails.email;
-   const accessToken = cookies.accountDetails.accessToken;
 
-   const options = { headers: { "Content-Type": "application/json", "Authorization" : `Bearer ${accessToken}`} };
+  const isAuthenticated = JSON.parse(localStorage.getItem("accessToken")) ? true : false;
+  const { contacts, activeContact } = useSelector(state => state.contacts);
+  const { messages } = useSelector(state => state.messages);
 
-useEffect(() => {
-  socket.on("connect", () => {
-    socket.emit('join room', userEmail )
-  });
-},[])
+  const userEmail = JSON.parse(localStorage.getItem("userInfo")).email;
+  const accessToken = JSON.parse(localStorage.getItem("accessToken"));
+
+  const options = { headers: { "Content-Type": "application/json", "Authorization": `Bearer ${accessToken}` } };
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      socket.emit('join room', userEmail)
+    });
+  }, [])
 
 
-useEffect(() => {
+  useEffect(() => {
     // fetch and update messages
     let messageList = [];
-    axios.post('http://localhost:5000/app/get-messages', {
-      sender: userEmail,
-      target: activeContact
-    }, options).then(res => {
-      res?.data?.messages?.reverse()?.forEach(({message, sender, target}) => {
+    privateAxiosInstance.post('/get-messages', {
+      data: {
+        sender: userEmail,
+        target: activeContact
+      }
+    }
+    ).then(res => {
+      res?.data?.messages?.reverse()?.forEach(({ message, sender, target }) => {
         if (sender.email === userEmail) {
-          const messageData = {message, sender: sender.email , target : activeContact  }
+          const messageData = { message, sender: sender.email, target: activeContact }
           messageList.push(messageData)
         } else {
           messageList.push({
-            message, sender : activeContact, target: sender.email,
+            message, sender: activeContact, target: sender.email,
           })
         }
       });
       dispatch(sendMessage(messageList))
     }).catch(err => {
-        console.log(err,"this is")
+      console.log(err, "this is")
     });
-},[activeContact])
+  }, [activeContact])
 
-useEffect(() => {
-  socket.on('new message', (message, sender) => {
-    dispatch(sendMessage([...messages, {
-      message, sender, target: userEmail
-    }]))
-  });
-  return () => socket.off('new message');
-},[socket, messages])
+  useEffect(() => {
+    socket.on('new message', (message, sender) => {
+      dispatch(sendMessage([...messages, {
+        message, sender, target: userEmail
+      }]))
+    });
+    return () => socket.off('new message');
+  }, [socket, messages])
 
 
 
   const getAllContacts = () => {
-    axios.post('http://localhost:5000/app/contacts', {
-      email: userEmail
-    }, options).then(res => {
-      const contactsList =  res.data.contacts
+    privateAxiosInstance.post('/contacts', {
+      data : {
+        email: userEmail
+      }
+    }).then(res => {
+      const contactsList = res.data.contacts
       dispatch(updateContacts(contactsList));
     }).catch(err => {
-        console.log(err,"this is")
+      console.log(err, "this is")
     });
   };
 
   useEffect(() => {
-    if (!isAuthenticated ) {
+    if (!isAuthenticated) {
       navigate("/login");
     } else {
       getAllContacts();
@@ -108,24 +112,25 @@ useEffect(() => {
 
   return (
     <div className="Chat-container">
-        <div className="contacts-card">
-            <div className="heading-1"><span onClick={addProfilePic}><img src=""></img></span>{userEmail}</div>
-            <h2 className="heading-2">Contacts<span data-tooltip-id="my-tooltip" data-tooltip-content="Add contact"><img onClick={handleAddContactModal} className="add-icon" alt="add contact icon" src={plus} /><Tooltip id="my-tooltip" /></span></h2>
-            <div className="contacts-list">
-              {contacts.map(contact => { return (
-                  <ContactCard key={contact} name={contact}/>
-              )  
-              })}
-            </div>
+      <div className="contacts-card">
+        <div className="heading-1"><span onClick={addProfilePic}><img src=""></img></span>{userEmail}</div>
+        <h2 className="heading-2">Contacts<span data-tooltip-id="my-tooltip" data-tooltip-content="Add contact"><img onClick={handleAddContactModal} className="add-icon" alt="add contact icon" src={plus} /><Tooltip id="my-tooltip" /></span></h2>
+        <div className="contacts-list">
+          {contacts.map(contact => {
+            return (
+              <ContactCard key={contact} name={contact} />
+            )
+          })}
         </div>
-        <div className="chat-window">
-            <ChatHeader name={activeContact} />
-            {<MessagesBackground messages={activeContact ? messages : []}  />}
-            {activeContact ?<MessageInput socket={socket}/> : null}
-        </div>
+      </div>
+      <div className="chat-window">
+        <ChatHeader name={activeContact} />
+        {<MessagesBackground messages={activeContact ? messages : []} />}
+        {activeContact ? <MessageInput socket={socket} /> : null}
+      </div>
 
-        <AddContactCard isOpen={addContactModalOpen} handleClose={() => setAddContactModalOpen(false)} />
-        <AddProfilePicCard isOpen={addProfilePicModalOpen} handleClose={() => setAddProfilePicModalOpen(false)} />
+      <AddContactCard isOpen={addContactModalOpen} handleClose={() => setAddContactModalOpen(false)} />
+      <AddProfilePicCard isOpen={addProfilePicModalOpen} handleClose={() => setAddProfilePicModalOpen(false)} />
     </div>
   );
 };
