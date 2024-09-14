@@ -32,7 +32,7 @@ exports.addContactsHandler = (req, res) => {
 };
 
 exports.getContactsHandler = (req, res) => {
-    User.findOne({ email: req.body.email }).exec(
+    User.findOne({ email: req.body.data.email }).exec(
         (err, user) => {
             if (err) {
                 return res.status(500).send({ message: "There was a problem getting your contacts." })

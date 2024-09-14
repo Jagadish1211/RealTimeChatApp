@@ -44,13 +44,18 @@ io.on('connection', (socket) => {
 } catch(error) {
   console.log(`${error} : Could not connect to MongoDB`)
 }
+const corsOptions = {
+  origin: 'http://localhost:3001', // The client origin you want to allow
+  credentials: true,               // Enable credentials (cookies, authorization headers, TLS client certificates)
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Origin, Authorization');
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
   res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
   next();
 });
 

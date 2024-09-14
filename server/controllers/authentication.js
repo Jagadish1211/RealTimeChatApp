@@ -1,7 +1,5 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-// import User from "..models/user.js";
-
 const User = require("../models/user.js");
 
 exports.signUpHandler = (req, res, next) => {
@@ -38,8 +36,9 @@ exports.signUpHandler = (req, res, next) => {
 };
 
 exports.loginHandler = (req, res) => {
+  const { email, password } = req.body.data;
   User.findOne({
-    email: req.body.email,
+    email,
   }).exec((err, user) => {
     if (err) {
       return res
@@ -53,7 +52,7 @@ exports.loginHandler = (req, res) => {
 
     // compare password if user found
     const isPasswordValid = bcrypt.compareSync(
-      req.body.password,
+      password,
       user.password
     );
     if (!isPasswordValid) {
@@ -70,7 +69,7 @@ exports.loginHandler = (req, res) => {
       },
       "THIS_IS_API_SECRET",
       {
-        expiresIn: 600, // expires in 10 mins
+        expiresIn: 60, // expires in 10 mins
       }
     );
 
@@ -82,7 +81,7 @@ exports.loginHandler = (req, res) => {
       }
     );
 
-    res.cookie("refreshToken", refreshToken, { httpOnly : true, secure : true, sameSite : "none"})
+    res.cookie("refreshToken", refreshToken, { httpOnly : true, maxAge: 86400 * 1000,  sameSite: 'None' });
 
     // now send response with token and login message
     res.status(200).send({
@@ -90,8 +89,47 @@ exports.loginHandler = (req, res) => {
         email: user.email,
       },
       message: "Login successful",
-      accessToken: authToken,
-      refreshToken: refreshToken
+      accessToken: authToken
     });
   });
 };
+
+exports.logoutHandler = (req, res) => {
+  res.clearCookie("refreshToken");
+  res.status(200).send({ message: "Logout successful" });
+};
+
+exports.refreshTokenHandler = (req, res, next) => {
+  const token = req.cookies.refreshToken;
+  console.log(req.cookies,"this is")
+
+  if (!token) {
+    return res.status(401).send({ message: "No token provided" });
+  }
+
+  jwt.verify(token, "THIS_IS_API_SECRET_REFRESH_TOKEN", (err, decodedUserDetails) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorized access" });
+    }
+
+    User.findOne({email: decodedUserDetails.id}).exec((error, user) => {
+      if (error) { return res.status(500).send({message: "An error occurred while retrieving user"})}
+      else if (user.email = decodedUserDetails.id) {
+        const authToken = jwt.sign(
+          {
+            id: decodedUserDetails.id,
+          },
+          "THIS_IS_API_SECRET",
+          {
+            expiresIn: 60, // expires in 10 mins
+          }
+        );
+    
+        res.status(200).send({
+          accessToken: authToken,
+        });
+      }
+  })
+
+  }
+  )};
